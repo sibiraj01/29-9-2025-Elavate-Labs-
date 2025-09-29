@@ -1,0 +1,120 @@
+package elavelabs;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Transaction class
+class Transaction {
+    private String type;
+    private double amount;
+
+    public Transaction(String type, double amount) {
+        this.type = type;
+        this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return type + " of $" + amount;
+    }
+}
+
+// Account class
+class Account {
+    private String accountHolder;
+    private double balance;
+    private List<Transaction> transactionHistory;
+
+    public Account(String accountHolder, double initialBalance) {
+        this.accountHolder = accountHolder;
+        this.balance = initialBalance;
+        this.transactionHistory = new ArrayList<>();
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            transactionHistory.add(new Transaction("Deposit", amount));
+            System.out.println("Deposited: $" + amount);
+        } else {
+            System.out.println("Invalid deposit amount!");
+        }
+    }
+
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            transactionHistory.add(new Transaction("Withdraw", amount));
+            System.out.println("Withdrew: $" + amount);
+        } else {
+            System.out.println("Invalid withdraw amount or insufficient balance!");
+        }
+    }
+
+    public void showBalance() {
+        System.out.println("Current Balance: $" + balance);
+    }
+
+    public void showTransactions() {
+        System.out.println("Transaction History for " + accountHolder + ":");
+        for (Transaction t : transactionHistory) {
+            System.out.println(t);
+        }
+    }
+}
+
+// Main class
+public class BankApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Create account
+        System.out.print("Enter account holder name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter initial balance: ");
+        double initialBalance = sc.nextDouble();
+
+        Account account = new Account(name, initialBalance);
+
+        int choice;
+        do {
+            System.out.println("\n===== Bank Menu =====");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Show Balance");
+            System.out.println("4. Show Transactions");
+            System.out.println("5. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter deposit amount: ");
+                    double depAmount = sc.nextDouble();
+                    account.deposit(depAmount);
+                    break;
+                case 2:
+                    System.out.print("Enter withdraw amount: ");
+                    double wdAmount = sc.nextDouble();
+                    account.withdraw(wdAmount);
+                    break;
+                case 3:
+                    account.showBalance();
+                    break;
+                case 4:
+                    account.showTransactions();
+                    break;
+                case 5:
+                    System.out.println("Exiting... Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Try again.");
+            }
+
+        } while (choice != 5);
+
+        sc.close();
+    }
+
+}
